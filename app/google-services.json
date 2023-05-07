@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "417219303161",
+    "project_id": "urbanfit-f04b7",
+    "storage_bucket": "urbanfit-f04b7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:417219303161:android:801d130c2f28622f7bf428",
+        "android_client_info": {
+          "package_name": "com.example.urbanfit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "417219303161-he2tmn7k1n49pcvhq29qkp276qh5hahp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsE-Aav1PFGkpR43QwYXZV4boxPjXJLso"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "417219303161-he2tmn7k1n49pcvhq29qkp276qh5hahp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

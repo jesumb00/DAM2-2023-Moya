@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".RegisterActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Registrarse"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        />
+    <EditText
+        android:id="@+id/registerEmail"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:inputType="textEmailAddress"
+        android:hint="email"
+        />
+    <EditText
+        android:id="@+id/registerPassword"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:inputType="textPassword"
+        android:hint="password"
+        />
+    <EditText
+        android:id="@+id/registerRepeatPassword"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:inputType="textPassword"
+        android:hint="repeat password"
+        />
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Registrarse"
+        />
+    <Button
+        android:id="@+id/registerGoLoginButton"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Ya tengo una cuenta"
+        />
+</LinearLayout>
