@@ -2,7 +2,9 @@ package com.example.urbanfit
 
 
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +12,8 @@ import android.util.Log
 
 import android.widget.*
 import androidx.core.view.isVisible
+import com.bumptech.glide.Glide
+
 
 
 import com.example.urbanfit.databinding.ActivityDataUserBinding
@@ -23,6 +27,13 @@ import com.google.firebase.storage.FirebaseStorage
 import java.util.Calendar
 
 import java.util.Date
+
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+
+import android.view.View
 
 
 class DataUser : AppCompatActivity() {
@@ -50,11 +61,11 @@ class DataUser : AppCompatActivity() {
         setContentView(binding.root)
 
         getDataUser()
-        if (!create){
+        if (!create) {
             binding.dataCancelledButton.isVisible = false
             dataRecovery()
+            getFirebaseStorageImageReference()
         }
-
 
         OptionsGYMAssociated()
         binding.dataBirthdate.setOnClickListener {
@@ -79,39 +90,87 @@ class DataUser : AppCompatActivity() {
         }*/
     }
     private fun deleteUser(){
+        //elimina un documento de Firestore en la colección "user" correspondiente al email dado como parámetro.
         db.collection("user").document(email).delete()
 
     }
     fun getFirebaseStorageImageReference() {
+        // Obtiene la referencia al objeto de Firebase Storage donde se encuentra la imagen a cargar
         val storageReference = FirebaseStorage.getInstance().getReference("user/$email")
-        //storageReference.downloadUrl.
+        // Utiliza Glide para cargar la imagen y establece un listener para manejar eventos de carga
+        Glide
+            .with(this)
+            .load(storageReference)
+            .listener(object : RequestListener<Drawable> {
+                // Este método se llama si la carga de la imagen falla
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    // Oculta la barra de progreso si la carga falla
+                    binding.progressBar.visibility = View.GONE
+                    return false
+                }
 
+                // Este método se llama cuando la imagen se ha cargado correctamente
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    // Oculta la barra de progreso cuando la carga se completa
+                    binding.progressBar.visibility = View.GONE
+                    return false
+                }
+            })
+            // Establece la vista de destino para la imagen cargada
+            .into(binding.image);
     }
 
     fun toDateBirthdate(timestamp: Timestamp?): String {
+        // Obtiene una instancia del objeto Calendar para trabajar con fechas
         val calendar = Calendar.getInstance()
+        //let es una función que se utiliza para realizar una acción en un objeto no nulo.
+        //Si el objeto es nulo, el bloque de código dentro de la función let no se ejecuta.
         timestamp?.let {
+            // Convierte el objeto Timestamp a milisegundos
             val timeInMillis = it.seconds * 1000 + it.nanoseconds / 1000000
+            // Configura el calendario con la fecha en milisegundos
             calendar.timeInMillis = timeInMillis
+            // Obtiene el día, el mes y el año del calendario
             val day = calendar.get(Calendar.DAY_OF_MONTH)
             val month = calendar.get(Calendar.MONTH) + 1
             val year = calendar.get(Calendar.YEAR)
+            // Retorna la fecha en formato de cadena de texto
             return "$day/$month/$year"
         }
+        // Retorna una cadena vacía si el argumento 'timestamp' es nulo
         return ""
     }
+
     fun selectRadioButtonByText(text: String?) {
+        // Recorremos todos los elementos hijos del RadioGroup
         for (i in 0 until binding.radioGroup.childCount) {
+            // Obtenemos el RadioButton en la posición i
             val radioButton = binding.radioGroup.getChildAt(i) as RadioButton
+            // Comparamos el texto del RadioButton con el texto que buscamos
             if (radioButton.text.toString() == text) {
+                // Si el texto coincide, marcamos el RadioButton
                 radioButton.isChecked = true
+                // Salimos del bucle
                 break
             }
         }
     }
 
 
+
     fun getSpinnerIndexByText(text: String?): Int {
+
         for (i in 0 until binding.dataGYMAssociated.count) {
             if (binding.dataGYMAssociated.getItemAtPosition(i).toString() == text) {
                 return i
@@ -264,4 +323,7 @@ class DataUser : AppCompatActivity() {
 
             }
     }
+
+
+
 }
