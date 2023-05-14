@@ -39,7 +39,7 @@ class RegisterActivity : AppCompatActivity() {
                 startActivity(Intent(this, DataUser::class.java)
                     .putExtra("email", email)
                     .putExtra("password",password)
-                    .putExtra("create", true))
+                    .putExtra("create", "true"))
                 finish()
             }else{
                 Toast.makeText(applicationContext, "Revisa los datos introducidos", Toast.LENGTH_LONG).show()

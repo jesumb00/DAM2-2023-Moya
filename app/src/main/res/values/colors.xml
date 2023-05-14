@@ -8,5 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="userPhoto">#2E275A</color>
-    <color name="email">#252525</color>
+    <color name="label">#252525</color>
+    <color name="data">#393939</color>
 </resources>

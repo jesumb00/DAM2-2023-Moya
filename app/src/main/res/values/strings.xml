@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">UrbanFit</string>
-    <string name="title_activity_main2">MainActivity2</string>
+    <string name="title_activity_main">MainActivity</string>
     <string name="title_home">Inicio</string>
     <string name="title_bookings">Reservar</string>
     <string name="title_profile">Perfil</string>

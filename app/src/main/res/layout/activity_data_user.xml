@@ -18,9 +18,9 @@
         android:layout_height="wrap_content"
         android:text="Datos del usuario"
         android:textAlignment="center"
-        android:textSize="26sp"
+        android:textSize="36sp"
         android:textStyle="bold"
-        android:textColor="@color/email"/>
+        android:textColor="@color/label"/>
 
     <LinearLayout
         android:id="@+id/dataPhotho"
