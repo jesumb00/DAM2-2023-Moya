@@ -200,6 +200,13 @@ class ProfileFragment : Fragment() {
                     Toast.makeText(requireContext(), "No ha sido posible eliminar el usuario", Toast.LENGTH_LONG).show()
                 }
             }
+        val storage = FirebaseStorage.getInstance()
+
+        // Obtén la referencia al archivo que deseas borrar
+        val storageRef = storage.reference.child("user/$email")
+
+        // Borra el archivo
+        storageRef.delete()
 
     }
     override fun onDestroyView() {

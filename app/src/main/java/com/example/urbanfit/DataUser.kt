@@ -61,7 +61,6 @@ class DataUser : AppCompatActivity() {
         getDataUser()
 
         if (!create) {
-            binding.dataCancelledButton.isVisible = false
             dataRecovery()
             getFirebaseStorageImageReference()
         }
@@ -92,6 +91,19 @@ class DataUser : AppCompatActivity() {
                 }
 
             }
+        binding.dataCancelledButton.setOnClickListener{
+            if(create) {
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            }else{
+                startActivity(Intent(this, MainActivity::class.java)
+                    .putExtra("yes", true)
+                    .putExtra("email", email)
+                    .putExtra("password",password))
+                finish()
+            }
+
+        }
 
 
     }
