@@ -112,7 +112,7 @@
     <RadioGroup
         android:id="@+id/radioGroup"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="50dp"
         android:orientation="horizontal"
         android:gravity="center">
 
@@ -145,7 +145,7 @@
     <Spinner
         android:id="@+id/dataGYMAssociated"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="48dp"
         android:spinnerMode="dialog"
         android:contentDescription="Selecciona el gimnasio asociado">
     </Spinner>
