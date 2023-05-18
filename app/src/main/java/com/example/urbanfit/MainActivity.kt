@@ -19,11 +19,9 @@ class MainActivity : AppCompatActivity() {
     var yes: Boolean= false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        getDataUser()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        getDataUser()
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main2)
