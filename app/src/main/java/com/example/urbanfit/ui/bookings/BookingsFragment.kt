@@ -2,6 +2,7 @@ package com.example.urbanfit.ui.bookings
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.urbanfit.*
 import com.example.urbanfit.databinding.FragmentBookingsBinding
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
@@ -126,6 +128,47 @@ class BookingsFragment : Fragment(), AdapterCallback {
         builder.setPositiveButton("Reservar") { dialog, which ->
             // Acciones a realizar cuando se presiona el botón Aceptar
             Toast.makeText(requireContext(), "Aceptar", Toast.LENGTH_SHORT).show()
+            db = FirebaseFirestore.getInstance()
+            /*val userRef = db.collection("user").document(email).collection("booking")
+
+            userRef.get()
+                .addOnSuccessListener { querySnapshot ->
+                    for (document in querySnapshot) {
+                        // Acceder a los datos de cada documento
+                        val hour = document.getString("hour")
+                        val date = document.getTimestamp("date")
+                        val className = document.getString("class")
+                        val associatedGym = document.getString("associatedGym")
+
+                        // Realizar las acciones deseadas con los datos
+
+                        Log.d("Firestore", "Hora: $hour, Fecha: $date, Clase: $className, Gimnasio: $associatedGym")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    // Manejar el error en caso de que ocurra
+                    Toast.makeText(requireContext(), "Error al obtener los documentos: ${exception.message}", Toast.LENGTH_SHORT).show()
+                }*/
+
+            val currentDate = Timestamp.now()
+            val userRef = db.collection("user").document(email).collection("booking")
+            val subcollectionData = hashMapOf(
+                "hour" to data.schedule,
+                "date" to currentDate,
+                "class" to data.name,
+                "associatedGym" to data.associatedGym
+            )
+            userRef.add(subcollectionData)
+                .addOnSuccessListener { documentReference ->
+                    Toast.makeText(requireContext(), "Se añadio", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { exception ->
+                    Toast.makeText(requireContext(), "No se añadio", Toast.LENGTH_SHORT).show()
+                }
+
+
+
+
         }
 
         builder.setNegativeButton("Cancelar") { dialog, which ->
