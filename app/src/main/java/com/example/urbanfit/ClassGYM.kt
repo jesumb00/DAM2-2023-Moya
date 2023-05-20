@@ -1,7 +1,6 @@
 package com.example.urbanfit
 
 data class ClassGym(
-    val id: String,
     val name: String,
     val description: String,
     val schedule: String,
