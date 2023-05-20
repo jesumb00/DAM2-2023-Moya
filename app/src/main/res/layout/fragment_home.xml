@@ -19,4 +19,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <ListView
+        android:id="@+id/listBooking"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:clickable="true"
+        android:divider="@drawable/divider"
+        android:dividerHeight="8dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"></ListView>
 </androidx.constraintlayout.widget.ConstraintLayout>
