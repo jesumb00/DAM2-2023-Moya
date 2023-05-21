@@ -37,13 +37,13 @@
         app:layout_constraintTop_toTopOf="@+id/imageView" />
 
     <TextView
-        android:id="@+id/dataClassSchedule"
+        android:id="@+id/dataClassHour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="10:00-10:45"
         android:textColor="@color/label"
         android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="@+id/dataClassMonitor"
+        app:layout_constraintBottom_toBottomOf="@+id/dataBookingDate"
         app:layout_constraintStart_toEndOf="@+id/imageView3"
         app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
@@ -62,7 +62,7 @@
         app:layout_constraintVertical_bias="0.651" />
 
     <TextView
-        android:id="@+id/dataClassMonitor"
+        android:id="@+id/dataBookingDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Angel suarez"
@@ -89,8 +89,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/dataClassMonitor"
-        app:layout_constraintStart_toEndOf="@+id/dataClassMonitor"
+        app:layout_constraintBottom_toBottomOf="@+id/dataBookingDate"
+        app:layout_constraintStart_toEndOf="@+id/dataBookingDate"
         app:layout_constraintTop_toBottomOf="@+id/dataClassDescription"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/baseline_alarm_24" />

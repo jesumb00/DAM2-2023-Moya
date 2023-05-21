@@ -1,4 +1,4 @@
-package com.example.urbanfit
+package com.example.urbanfit.ui.bookings
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,8 +8,10 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.LayoutRes
+import com.example.urbanfit.ClassGym
+import com.example.urbanfit.R
 
-class AdapterClass(
+class AdapterClassClassGym(
     private val ctx: Context,
     /**
      * almacena la referencia al recurso de
@@ -19,8 +21,8 @@ class AdapterClass(
      * */
     @LayoutRes private val layoutTemplate: Int,
     private val classGym: List<ClassGym>
-) : ArrayAdapter<ClassGym>(ctx, layoutTemplate, classGym),  AdapterCallback{
-    private var callback: AdapterCallback? = null
+) : ArrayAdapter<ClassGym>(ctx, layoutTemplate, classGym), AdapterCallbackClassGym {
+    private var callback: AdapterCallbackClassGym? = null
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var itemView = convertView
         if (itemView == null) {
@@ -36,8 +38,8 @@ class AdapterClass(
 
         var dataClassName = itemView?.findViewById<TextView>(R.id.dataClassName)
         var dataClassDescription = itemView?.findViewById<TextView>(R.id.dataClassDescription)
-        var dataClassMonitor = itemView?.findViewById<TextView>(R.id.dataClassMonitor)
-        var dataClassSchedule = itemView?.findViewById<TextView>(R.id.dataClassSchedule)
+        var dataClassMonitor = itemView?.findViewById<TextView>(R.id.dataBookingDate)
+        var dataClassSchedule = itemView?.findViewById<TextView>(R.id.dataClassHour)
         dataClassName?.text = classPosition.name
         dataClassDescription?.text = classPosition.description
         dataClassMonitor?.text = classPosition.monitor
@@ -63,7 +65,7 @@ class AdapterClass(
     override fun onItemClicked(data: ClassGym) {
         TODO("Not yet implemented")
     }
-    fun setAdapterCallback(callback: AdapterCallback) {
+    fun setAdapterCallback(callback: AdapterCallbackClassGym) {
         this.callback = callback
     }
 

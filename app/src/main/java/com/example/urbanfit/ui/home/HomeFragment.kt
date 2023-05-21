@@ -1,19 +1,17 @@
 package com.example.urbanfit.ui.home
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.urbanfit.BookingGYM
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.urbanfit.MainActivity
 import com.example.urbanfit.databinding.FragmentHomeBinding
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import java.util.Calendar
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
@@ -23,10 +21,11 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import android.graphics.Color
 import androidx.lifecycle.MutableLiveData
-import java.util.Date
+import com.example.urbanfit.*
+import java.util.*
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), AdapterCallbackBookingGym {
 
     private var _binding: FragmentHomeBinding? = null
 
@@ -54,6 +53,7 @@ class HomeFragment : Fragment() {
 
 
 
+
         return root
     }
     /**
@@ -68,7 +68,6 @@ class HomeFragment : Fragment() {
     private fun getBookings() {
 
         val userRef = db.collection("user").document(email).collection("booking")
-
         val today = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 0) // Establecer la hora en 00:00
             set(Calendar.MINUTE, 0)
@@ -77,27 +76,30 @@ class HomeFragment : Fragment() {
         }.time
 
         val query = userRef.whereEqualTo("date", today)
-
+        Log.d("Firestore", "Fechas:::::::::$today")
         val bookingList = mutableListOf<BookingGYM>() // Lista para almacenar las reservas
 
         query.get()
             .addOnSuccessListener { querySnapshot ->
                 for (document in querySnapshot) {
                     // Acceder a los datos de cada documento
+                    val id = document.id
                     val hour = document.getString("hour") ?: ""
                     val date = convertTimestampToCalendar(document.getTimestamp("date") ?: Timestamp.now())
                     val className = document.getString("class") ?: ""
                     val associatedGym = document.getString("associatedGym") ?: ""
 
                     // Crear objeto Booking y agregarlo a la lista
-                    val booking = BookingGYM(hour, date, className, associatedGym)
+                    val booking = BookingGYM(id,hour, date, className, associatedGym)
                     bookingList.add(booking)
-
                     // Realizar las acciones deseadas con los datos
 
-                    Log.d("Firestore", "Hora: $hour, Fecha: $date, Clase: $className, Gimnasio: $associatedGym")
+                    Log.d("Firestore", "Clase: $className, Gimnasio: $associatedGym")
                 }
 
+                val adapterClass = AdapterClassBooking(requireContext(), R.layout.booking_item, bookingList)
+                adapterClass.setAdapterCallback(this)
+                binding.listBooking.adapter = adapterClass
 
 
             }
@@ -280,38 +282,31 @@ class HomeFragment : Fragment() {
      * Obtiene la fecha de incio de la semana
      * */
     fun getStartOfWeek(): Date {
-        val calendar = Calendar.getInstance() // Obtener una instancia del objeto Calendar
-
-        calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek) // Establecer el primer día de la semana
-        calendar.add(Calendar.DAY_OF_WEEK, -6) // Restar 6 días para obtener el inicio de la semana actual
-
-        // Establecer la hora, minutos, segundos y milisegundos a cero para obtener la fecha de inicio exacta
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek+1)
         calendar.set(Calendar.HOUR_OF_DAY, 0)
         calendar.set(Calendar.MINUTE, 0)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
-
-        println("Inicio de la semana: ${calendar.time}")
-
-        return calendar.time // Devolver la fecha de inicio de la semana como un objeto Date
+        println("Empiezo ${calendar.time}")
+        return calendar.time
     }
 
     /**
      * Obtiene la fecha de finalizacion de la semana
      * */
     fun getEndOfWeek(): Date {
-        val calendar = Calendar.getInstance() // Obtener una instancia del objeto Calendar
-
-        calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek) // Establecer el primer día de la semana
-        calendar.set(Calendar.HOUR_OF_DAY, 23) // Establecer la última hora del día
-        calendar.set(Calendar.MINUTE, 59) // Establecer el último minuto de la hora
-        calendar.set(Calendar.SECOND, 59) // Establecer el último segundo del minuto
-        calendar.set(Calendar.MILLISECOND, 999) // Establecer el último milisegundo del segundo
-
-        println("Fin de la semana: ${calendar.time}")
-
-        return calendar.time // Devolver la fecha de fin de la semana como un objeto Date
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.WEEK_OF_YEAR, 1) // Avanza una semana
+        calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek) // Establece el primer día de la semana
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        println("Inicio ${calendar.time}")
+        return calendar.time
     }
+
 
 
 
@@ -321,4 +316,64 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
+    override fun onItemClicked(data: BookingGYM) {
+        var name = capitalizeFirstLetter(data.className)
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Confirmación")
+        builder.setMessage("¿Deseas cancelar la reserva de la $name?")
+        builder.setPositiveButton("Cancelar") { dialog, which ->
+            val db = FirebaseFirestore.getInstance()
+            val bookingRef = db.collection("user").document(email)
+                .collection("booking").document(data.id)
+
+            bookingRef.delete()
+                .addOnSuccessListener {
+                    // El documento de booking se eliminó correctamente
+                    seeMessageRepeatReservationShow("Se elimino la clase correctamente")
+                    fixArray()
+                    countReservationsCurrentWeek(email)
+                }
+                .addOnFailureListener { exception ->
+                    // Ocurrió un error al eliminar el documento de booking
+                    seeMessageRepeatReservationShow("No se elimino la clase correctamente")
+
+                }
+        }
+
+        // Configurar el botón de Cancelar
+        builder.setNegativeButton("No cancelar", null)
+
+        // Mostrar el diálogo
+        val dialog = builder.create()
+        dialog.show()
+
+    }
+
+    private fun seeMessageRepeatReservationShow(message: String) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Aviso")
+        builder.setMessage(message)
+
+        // Configurar el botón de aceptar
+        builder.setNegativeButton("Aceptar", null)
+
+        // Crear y mostrar la ventana emergente
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    /**
+     * Permite convertir la primera letra de una cadena en mayucula
+     */
+    fun capitalizeFirstLetter(input: String): String {
+        if (input.isEmpty()) {
+            return input // Si la cadena está vacía, no se hace ningún cambio y se devuelve tal cual
+        }
+
+        val firstChar = input.substring(0, 1) // Obtiene el primer carácter de la cadena
+        val remainingChars = input.substring(1) // Obtiene el resto de la cadena
+
+        // Concatena el primer carácter en mayúscula con el resto de la cadena y lo devuelve
+        return "${firstChar.uppercase(Locale.getDefault())}$remainingChars"
+    }
 }

@@ -2,9 +2,13 @@ package com.example.urbanfit.ui.bookings
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -16,7 +20,8 @@ import java.util.*
 
 
 
-class BookingsFragment : Fragment(), AdapterCallback {
+
+class BookingsFragment : Fragment(), AdapterCallbackClassGym {
 
     private var _binding: FragmentBookingsBinding? = null
 
@@ -25,6 +30,9 @@ class BookingsFragment : Fragment(), AdapterCallback {
     private val binding get() = _binding!!
     lateinit var email: String
     private lateinit var db: FirebaseFirestore
+    lateinit var associatedGym: String
+    lateinit var adapter: ArrayAdapter<String>
+    var isFirstSelection= true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,9 +44,54 @@ class BookingsFragment : Fragment(), AdapterCallback {
         val root: View = binding.root
 
         fixArray()
+        binding.chooseGymAssociated.doOnItemSelected { position ->
+            // Acciones a realizar cuando se selecciona una opción del Spinner
+            val selectedItem = binding.chooseGymAssociated.getItemAtPosition(position).toString()
+            // Realiza las acciones deseadas con la opción seleccionada
+            getClasses(selectedItem)
+        }
 
         return root
     }
+
+    /**
+     *  crear un ArrayAdapter para poder mostrar los elementos del spinner.
+     *  */
+    private fun OptionsGYMAssociated() {
+        // Obtiene una instancia de FirebaseFirestore
+        var db = FirebaseFirestore.getInstance()
+
+        // Accede a la colección deseada
+        db.collection("gym")
+            .get()
+            .addOnSuccessListener { documents ->
+                // Crea una lista vacía para almacenar los nombres de los documentos
+                var documentNames = listOf<String>()
+
+                // Recorre los documentos de la colección y agrega sus nombres a la lista
+                for (document in documents) {
+                    documentNames = documentNames.plusElement(document.id)
+                }
+
+                // Creamos un ArrayAdapter y le pasamos el contexto de la actividad, el layout de la vista de los elementos y la lista de elementos a mostrar
+                adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, documentNames)
+                // Especificamos el layout a utilizar cuando se despliegan las opciones del spinner
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                // Seteamos el adapter en el spinner
+                binding.chooseGymAssociated.adapter=adapter
+                // Buscar el índice del texto en el ArrayAdapter
+                val index = adapter.getPosition(associatedGym)
+
+                // Seleccionar el índice en el Spinner
+                binding.chooseGymAssociated.setSelection(index)
+            }
+            .addOnFailureListener { exception ->
+                // Maneja el caso en que se produzca un error al acceder a la colección
+                Log.e("TAG", "Error al obtener los documentos de la colección", exception)
+            }
+
+    }
+
     /**
      * Inicia la obtencion de datos de la lista a partir del associatedGym del usuario
      * */
@@ -48,10 +101,11 @@ class BookingsFragment : Fragment(), AdapterCallback {
 
         // Realiza una consulta a la colección "user" y obtiene el documento correspondiente al email
         db.collection("user").document(email).get().addOnSuccessListener { documentSnapshot ->
-            val associatedGym = documentSnapshot.getString("associatedGym") // Obtiene el valor del campo "associatedGym" del documento
+            associatedGym = documentSnapshot.getString("associatedGym") ?: "" // Obtiene el valor del campo "associatedGym" del documento
 
             // Verifica si el campo "associatedGym" no es nulo
             if (associatedGym != null) {
+                OptionsGYMAssociated()
                 getClasses(associatedGym) // Llama a la función "getClasses" pasando el valor de "associatedGym" como argumento
             }
         }
@@ -95,12 +149,11 @@ class BookingsFragment : Fragment(), AdapterCallback {
                         val name = document.getString("name") ?: ""
                         val description = document.getString("description") ?: ""
                         val schedule = document.getString("schedule") ?: ""
-                        val maximumCapacity = document.getLong("maximumCapacity")?.toInt() ?: 0
+                        val maximumCapacity = document.getLong("maximunCapacity")?.toInt() ?: 0
                         val capacity = document.getLong("capacity")?.toInt() ?: 0
                         val difficulty = document.getString("difficulty") ?: ""
                         val monitor = document.getString("monitor") ?: ""
-
-                        if(capacity<maximumCapacity) {//comprueba que la capacidad no es la misma que la maxima
+                        if (capacity < maximumCapacity) {//comprueba que la capacidad no es la misma que la maxima
 
                             // Agregar la clase a la lista tempList
                             tempList += ClassGym(
@@ -120,7 +173,7 @@ class BookingsFragment : Fragment(), AdapterCallback {
             }
 
             // Crear un adaptador personalizado y establecerlo en el RecyclerView
-            val adapterClass = AdapterClass(requireContext(), R.layout.bookings_item, tempList)
+            val adapterClass = AdapterClassClassGym(requireContext(), R.layout.class_item, tempList)
             adapterClass.setAdapterCallback(this)
             binding.listClass.adapter = adapterClass
         }
@@ -190,7 +243,7 @@ class BookingsFragment : Fragment(), AdapterCallback {
                 .addOnFailureListener { exception ->
                     seeMessageRepeatReservationShow("Error al consultar las reservas")
                 }
-        }
+            }
 
         // Configurar el botón de Cancelar
         builder.setNegativeButton("Cancelar", null)
@@ -198,6 +251,7 @@ class BookingsFragment : Fragment(), AdapterCallback {
         // Mostrar el diálogo
         val dialog = builder.create()
         dialog.show()
+
     }
 
     /**
@@ -249,6 +303,22 @@ class BookingsFragment : Fragment(), AdapterCallback {
 
         // Concatena el primer carácter en mayúscula con el resto de la cadena y lo devuelve
         return "${firstChar.uppercase(Locale.getDefault())}$remainingChars"
+    }
+
+    fun Spinner.doOnItemSelected(action: (position: Int) -> Unit) {
+        onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (isFirstSelection) {
+                    isFirstSelection = false
+                } else {
+                    action.invoke(position)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // No hacer nada aquí si no se necesita
+            }
+        }
     }
 
 

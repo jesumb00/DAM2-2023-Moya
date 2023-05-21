@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.util.Log
 
 import android.widget.*
-import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 
 
