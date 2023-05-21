@@ -190,7 +190,7 @@ class BookingsFragment : Fragment(), AdapterCallback {
                 .addOnFailureListener { exception ->
                     seeMessageRepeatReservationShow("Error al consultar las reservas")
                 }
-        }
+            }
 
         // Configurar el botón de Cancelar
         builder.setNegativeButton("Cancelar", null)
@@ -198,6 +198,7 @@ class BookingsFragment : Fragment(), AdapterCallback {
         // Mostrar el diálogo
         val dialog = builder.create()
         dialog.show()
+
     }
 
     /**
