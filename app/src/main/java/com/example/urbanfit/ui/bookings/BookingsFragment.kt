@@ -172,10 +172,21 @@ class BookingsFragment : Fragment(), AdapterCallbackClassGym {
                 }
             }
 
-            // Crear un adaptador personalizado y establecerlo en el RecyclerView
-            val adapterClass = AdapterClassClassGym(requireContext(), R.layout.class_item, tempList)
-            adapterClass.setAdapterCallback(this)
-            binding.listClass.adapter = adapterClass
+            // Verificar si el tempList está vacío
+            if (tempList.isEmpty()) {
+                // Mostrar un mensaje indicando que no hay clases disponibles
+                binding.noClass.visibility = View.VISIBLE
+                binding.listClass.visibility = View.GONE
+            } else {
+                // Crear un adaptador personalizado y establecerlo en el RecyclerView
+                val adapterClass = AdapterClassClassGym(requireContext(), R.layout.class_item, tempList)
+                adapterClass.setAdapterCallback(this)
+                binding.listClass.adapter = adapterClass
+
+                // Ocultar el mensaje de vacío y mostrar el listView
+                binding.noClass.visibility = View.GONE
+                binding.listClass.visibility = View.VISIBLE
+            }
         }
     }
 

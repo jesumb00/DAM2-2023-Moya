@@ -15,7 +15,17 @@
         android:spinnerMode="dialog"
         android:textSize="48sp" />
 
-
+    <TextView
+        android:id="@+id/noClass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="En este momento no hay clases disponibles"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/label"
+        android:layout_marginBottom="6dp"
+        android:visibility="gone"/>
     <ListView
         android:id="@+id/listClass"
         android:layout_width="match_parent"
@@ -27,4 +37,5 @@
         android:focusable="true"
         android:focusableInTouchMode="true">
     </ListView>
+
 </LinearLayout>

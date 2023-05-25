@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="140dp" />
     <TextView
+        android:id="@+id/bookingYes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Reservas de hoy"
@@ -26,7 +27,18 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/label"
-        android:layout_marginBottom="6dp"/>
+        android:layout_marginBottom="6dp" />
+    <TextView
+        android:id="@+id/bookingNo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No tienes ninguna reserva para hoy"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/label"
+        android:layout_marginBottom="6dp"
+        android:visibility="gone"/>
     <ListView
         android:id="@+id/listBooking"
         android:layout_width="match_parent"
@@ -37,4 +49,5 @@
         android:dividerHeight="8dp"
         android:focusable="true"
         android:focusableInTouchMode="true"></ListView>
+
 </LinearLayout>

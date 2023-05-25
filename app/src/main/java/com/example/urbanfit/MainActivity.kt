@@ -25,9 +25,8 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main2)
-        if (yes){
-            navController.navigate(R.id.navigation_profile)
-        }
+
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
@@ -48,7 +47,6 @@ class MainActivity : AppCompatActivity() {
         // Se obtiene el correo electrónico de usuario
         email = bundle?.getString("email").toString()
         password = bundle?.getString("password").toString()
-        yes=bundle?.getBoolean("yes") ?: false
 
 
     }

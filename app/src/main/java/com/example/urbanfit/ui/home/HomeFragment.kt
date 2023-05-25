@@ -22,6 +22,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import android.graphics.Color
 import androidx.lifecycle.MutableLiveData
 import com.example.urbanfit.*
+import com.example.urbanfit.ui.bookings.AdapterClassClassGym
 import java.util.*
 
 
@@ -97,9 +98,25 @@ class HomeFragment : Fragment(), AdapterCallbackBookingGym {
                     Log.d("Firestore", "Clase: $className, Gimnasio: $associatedGym")
                 }
 
-                val adapterClass = AdapterClassBooking(requireContext(), R.layout.booking_item, bookingList)
-                adapterClass.setAdapterCallback(this)
-                binding.listBooking.adapter = adapterClass
+                // Verificar si el tempList está vacío
+                if (bookingList.isEmpty()) {
+                    // Mostrar un mensaje indicando que no hay clases disponibles
+                    binding.bookingNo.visibility = View.VISIBLE
+                    binding.bookingYes.visibility = View.GONE
+                    binding.listBooking.visibility = View.GONE
+                } else {
+                    // Crear un adaptador personalizado y establecerlo en el RecyclerView
+                    val adapterClass = AdapterClassBooking(requireContext(), R.layout.booking_item, bookingList)
+                    adapterClass.setAdapterCallback(this)
+                    binding.listBooking.adapter = adapterClass
+
+                    // Ocultar el mensaje de vacío y mostrar el listView
+                    binding.bookingNo.visibility = View.GONE
+                    binding.bookingYes.visibility = View.VISIBLE
+                    binding.listBooking.visibility = View.VISIBLE
+
+                }
+
 
 
             }
@@ -332,11 +349,17 @@ class HomeFragment : Fragment(), AdapterCallbackBookingGym {
                     seeMessageRepeatReservationShow("Se elimino la clase correctamente")
                     fixArray()
                     countReservationsCurrentWeek(email)
+                    if (binding.listBooking.adapter != null && binding.listBooking.adapter?.count == 0) {
+                        // El ListView está vacío
+                        // Mostrar un mensaje indicando que no hay clases disponibles
+                        binding.bookingNo.visibility = View.VISIBLE
+                        binding.bookingYes.visibility = View.GONE
+                        binding.listBooking.visibility = View.GONE
+                    }
                 }
                 .addOnFailureListener { exception ->
                     // Ocurrió un error al eliminar el documento de booking
                     seeMessageRepeatReservationShow("No se elimino la clase correctamente")
-
                 }
         }
 

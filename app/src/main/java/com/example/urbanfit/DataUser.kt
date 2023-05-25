@@ -56,15 +56,13 @@ class DataUser : AppCompatActivity() {
 
         binding = ActivityDataUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        OptionsGYMAssociated()
         getDataUser()
 
         if (!create) {
             dataRecovery()
             getFirebaseStorageImageReference()
         }
-
-        OptionsGYMAssociated()
         binding.dataBirthdate.setOnClickListener {
             showDatePickerDialog()
         }
@@ -96,7 +94,6 @@ class DataUser : AppCompatActivity() {
                 finish()
             }else{
                 startActivity(Intent(this, MainActivity::class.java)
-                    .putExtra("yes", true)
                     .putExtra("email", email)
                     .putExtra("password",password))
                 finish()

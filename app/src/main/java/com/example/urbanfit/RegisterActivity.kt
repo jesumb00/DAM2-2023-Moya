@@ -1,5 +1,6 @@
 package com.example.urbanfit
 
+import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -35,14 +36,14 @@ class RegisterActivity : AppCompatActivity() {
             val password = registerPassword.text.toString()
             val repeatPassword = registerRepeatPassword.text.toString()
 
-            if (password.equals(repeatPassword) && checkEmpty(email,password, repeatPassword)){
+            if (password.equals(repeatPassword) && checkEmpty(email,password)){
                 startActivity(Intent(this, DataUser::class.java)
                     .putExtra("email", email)
                     .putExtra("password",password)
                     .putExtra("create", "true"))
                 finish()
             }else{
-                Toast.makeText(applicationContext, "Revisa los datos introducidos", Toast.LENGTH_LONG).show()
+                seeMessageRepeatReservationShow("Las contraseñas introducidas deben ser iguales")
             }
         }
 
@@ -55,7 +56,43 @@ class RegisterActivity : AppCompatActivity() {
 
 
     //Comprueba si los campos estan rellenos
-    private fun checkEmpty(email: String, password:String, repeatPassword: String): Boolean{
-        return email.isNotEmpty() && password.isNotEmpty() && repeatPassword.isNotEmpty()
+    private fun checkEmpty(email: String, password: String): Boolean {
+        val emailPattern = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]+\$") // Patrón para validar el formato del email
+        val passwordPattern = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+\$") // Patrón para validar la contraseña
+
+        if (email.isEmpty()) {
+            seeMessageRepeatReservationShow("El campo de correo electrónico está vacío")
+            return false
+        }
+
+        if (!email.matches(emailPattern)) {
+            seeMessageRepeatReservationShow("El correo electrónico no tiene un formato válido")
+            return false
+        }
+
+        if (password.isEmpty()) {
+            seeMessageRepeatReservationShow("El campo de contraseña está vacío")
+            return false
+        }
+
+        if (!password.matches(passwordPattern)) {
+            seeMessageRepeatReservationShow("La contraseña debe contener al menos una letra minúscula, una letra mayúscula y un número")
+            return false
+        }
+
+        return true
+    }
+
+    private fun seeMessageRepeatReservationShow(message: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Aviso")
+        builder.setMessage(message)
+
+        // Configurar el botón de aceptar
+        builder.setNegativeButton("Aceptar", null)
+
+        // Crear y mostrar la ventana emergente
+        val dialog = builder.create()
+        dialog.show()
     }
 }
