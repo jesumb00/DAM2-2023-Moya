@@ -2,11 +2,16 @@ package com.example.urbanfit
 
 
 
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 
 import android.widget.*
@@ -32,6 +37,8 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 
 import android.view.View
+import androidx.core.content.ContentProviderCompat
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 
 class DataUser : AppCompatActivity() {
@@ -69,6 +76,9 @@ class DataUser : AppCompatActivity() {
 
         binding.imageEditButton.setOnClickListener {
             selectImage()
+        }
+        binding.imageRemoveButton.setOnClickListener {
+            deleteImage()
 
         }
 
@@ -116,8 +126,9 @@ class DataUser : AppCompatActivity() {
         Glide
             .with(this)
             .load(storageReference)
+            .skipMemoryCache(true)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .listener(object : RequestListener<Drawable> {
-                // Este método se llama si la carga de la imagen falla
                 override fun onLoadFailed(
                     e: GlideException?,
                     model: Any?,
@@ -126,6 +137,13 @@ class DataUser : AppCompatActivity() {
                 ): Boolean {
                     // Oculta la barra de progreso si la carga falla
                     binding.progressBar.visibility = View.GONE
+                    // Carga la imagen alternativa en caso de que la carga falle
+                    Handler(Looper.getMainLooper()).post {
+                        Glide
+                            .with(this@DataUser) // Reemplaza YourActivity con el nombre de tu actividad
+                            .load(R.drawable.img)
+                            .into(binding.image)
+                    }
                     return false
                 }
 
@@ -143,7 +161,7 @@ class DataUser : AppCompatActivity() {
                 }
             })
             // Establece la vista de destino para la imagen cargada
-            .into(binding.image);
+            .into(binding.image)
     }
     /**
      * se encarga de seleccionar el RadioButton correspondiente dentro de un RadioGroup,
@@ -339,12 +357,33 @@ class DataUser : AppCompatActivity() {
             .addOnFailureListener{
                 // Si hubo un error al subir la imagen, no hacemos nada
             }
+        Log.d("DeleteImage", "$imageUri")
+    }
+
+    /**
+     *Borrar la imagen
+     */
+    private fun deleteImage() {
+        // Obtenemos la referencia al storage de Firebase
+        val storageReference = FirebaseStorage.getInstance().getReference("user/$email")
+
+        // Eliminamos la imagen del storage y añadimos un listener para manejar el éxito o fallo de la operación
+        storageReference.delete()
+            .addOnSuccessListener {
+                // Si la imagen se eliminó con éxito del storage, limpiamos la vista del ImageView
+                binding.image.setImageDrawable(null)
+                seeMessageRepeatReservationShow("Se elimino correctamente")
+                binding.image.setImageResource(R.drawable.img)
+            }
+        binding.image.setImageResource(R.drawable.img)
     }
 
     /**
      *  función inicia una actividad para permitir al usuario seleccionar una imagen de su dispositivo.
      *  */
     private fun selectImage() {
+        binding.image.setImageResource(R.drawable.img)
+        binding.image.setImageResource(0)
         // Creamos un nuevo intent
         val intent = Intent()
         // Definimos el tipo de archivo a seleccionar
@@ -360,10 +399,12 @@ class DataUser : AppCompatActivity() {
      * actividad iniciada por startActivityForResult*/
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == 100 && resultCode == RESULT_OK){
-            Log.d("TAG", "llegue dentro");
-            imageUri = data?.data!!
-            binding.image.setImageURI(imageUri)
+        if (requestCode == 100 && resultCode == Activity.RESULT_OK) {
+            val selectedImageUri = data?.data
+            if (selectedImageUri != null) {
+                imageUri = selectedImageUri
+                binding.image.setImageURI(imageUri)
+            }
         }
     }
 
@@ -418,7 +459,7 @@ class DataUser : AppCompatActivity() {
     /**
      * Mostrar el texto del  DatePicker*/
     fun onDateSelected(day:Int, month:Int, year:Int){
-        binding.dataBirthdate.setText("$day/$month/$year")
+        binding.dataBirthdate.setText("$day/${month+1}/$year")
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.YEAR, year)
         calendar.set(Calendar.MONTH, month)
@@ -449,6 +490,17 @@ class DataUser : AppCompatActivity() {
             }
     }
 
+    private fun seeMessageRepeatReservationShow(message: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Aviso")
+        builder.setMessage(message)
 
+        // Configurar el botón de aceptar
+        builder.setNegativeButton("Aceptar", null)
+
+        // Crear y mostrar la ventana emergente
+        val dialog = builder.create()
+        dialog.show()
+    }
 
 }

@@ -180,7 +180,7 @@ class HomeFragment : Fragment(), AdapterCallbackBookingGym {
      * Establece los datos y algunas configuraciones del char
      */
     private fun setData(daysOfWeek: List<Float>) {
-        val bookingsPerDay = listOf("L", "M", "MX", "J", "V", "S", "D") // Lista de los nombres de los días de la semana
+        val bookingsPerDay = listOf("L", "M", "X", "J", "V", "S", "D") // Lista de los nombres de los días de la semana
 
         val entries = mutableListOf<BarEntry>()
         for (i in daysOfWeek.indices) {
