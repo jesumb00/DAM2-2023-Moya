@@ -13,7 +13,11 @@
         android:layout_height="56dp"
         android:contentDescription="Selecciona el gimnasio asociado"
         android:spinnerMode="dialog"
-        android:textSize="48sp" />
+        android:textSize="48sp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="14dp"
+        android:background="@color/line" />
 
     <TextView
         android:id="@+id/noClass"
@@ -24,7 +28,7 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/label"
-        android:layout_marginBottom="6dp"
+        android:layout_marginTop="24dp"
         android:visibility="gone"/>
     <ListView
         android:id="@+id/listClass"
@@ -33,7 +37,7 @@
         android:scrollbars="vertical"
         android:clickable="true"
         android:divider="@drawable/divider"
-        android:dividerHeight="8dp"
+        android:dividerHeight="11dp"
         android:focusable="true"
         android:focusableInTouchMode="true">
     </ListView>

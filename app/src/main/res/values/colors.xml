@@ -7,7 +7,12 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="userPhoto">#2E275A</color>
+    <color name="primary">#C62828</color>
+    <color name="primaryII">#FFCA28</color>
+    <color name="secundary">#B81D1D</color>
+    <color name="secundaryII">#FF4C4C</color>
+    <color name="userPhoto">#8E24AA</color>
     <color name="label">#252525</color>
     <color name="data">#393939</color>
+    <color name="line">#28AAA8A8</color>
 </resources>

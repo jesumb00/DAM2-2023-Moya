@@ -284,7 +284,7 @@ class BookingsFragment : Fragment(), AdapterCallbackClassGym {
      * Permite incrementar las personas de la clase reservada
      * */
     fun incrementCapacity(classId: String) {
-        Toast.makeText(requireContext(), "$classId", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(requireContext(), "$classId", Toast.LENGTH_SHORT).show()
         val classRef = db.collection("class").document(classId)
 
         db.runTransaction { transaction ->
@@ -294,7 +294,7 @@ class BookingsFragment : Fragment(), AdapterCallbackClassGym {
             transaction.update(classRef, "capacity", newCapacity) // Actualiza el campo 'capacity' en la transacción
             null // Indica que no se necesita devolver ningún resultado
         }.addOnSuccessListener {
-            Toast.makeText(requireContext(), "Campo 'capacity' incrementado correctamente", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(requireContext(), "Campo 'capacity' incrementado correctamente", Toast.LENGTH_SHORT).show()
         }.addOnFailureListener { exception ->
             Toast.makeText(requireContext(), "Error al incrementar el campo 'capacity'", Toast.LENGTH_SHORT).show()
         }

@@ -3,6 +3,8 @@ package com.example.urbanfit.ui.profile
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.ContactsContract.CommonDataKinds.Email
 import android.view.LayoutInflater
 import android.view.View
@@ -12,12 +14,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.urbanfit.DataUser
 import com.example.urbanfit.LoginActivity
 import com.example.urbanfit.MainActivity
+import com.example.urbanfit.R
 import com.example.urbanfit.databinding.FragmentProfileBinding
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -90,7 +94,7 @@ class ProfileFragment : Fragment() {
             calendar.timeInMillis = timeInMillis
             // Obtiene el día, el mes y el año del calendario
             val day = calendar.get(Calendar.DAY_OF_MONTH)
-            val month = calendar.get(Calendar.MONTH) + 1
+            val month = calendar.get(Calendar.MONTH) +1
             val year = calendar.get(Calendar.YEAR)
 
             dateBirthdate=calendar.time
@@ -152,6 +156,8 @@ class ProfileFragment : Fragment() {
         Glide
             .with(this)
             .load(storageReference)
+            .skipMemoryCache(true)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .listener(object : RequestListener<Drawable> {
                 // Este método se llama si la carga de la imagen falla
                 override fun onLoadFailed(
@@ -162,6 +168,12 @@ class ProfileFragment : Fragment() {
                 ): Boolean {
                     // Oculta la barra de progreso si la carga falla
                     binding.progressBar.visibility = View.GONE
+                    Handler(Looper.getMainLooper()).post {
+                        Glide
+                            .with(requireActivity())
+                            .load(R.drawable.img)
+                            .into(binding.image)
+                    }
                     return false
                 }
 

@@ -13,11 +13,19 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/label"
-        android:layout_marginBottom="6dp"/>
+        android:layout_marginTop="8dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/line" />
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="140dp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/line" />
     <TextView
         android:id="@+id/bookingYes"
         android:layout_width="match_parent"
@@ -27,7 +35,7 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/label"
-        android:layout_marginBottom="6dp" />
+        android:layout_marginTop="6dp" />
     <TextView
         android:id="@+id/bookingNo"
         android:layout_width="match_parent"
@@ -37,8 +45,12 @@
         android:textSize="22sp"
         android:textStyle="bold"
         android:textColor="@color/label"
-        android:layout_marginBottom="6dp"
+        android:layout_marginTop="6dp"
         android:visibility="gone"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/line" />
     <ListView
         android:id="@+id/listBooking"
         android:layout_width="match_parent"
@@ -46,7 +58,7 @@
         android:scrollbars="vertical"
         android:clickable="true"
         android:divider="@drawable/divider"
-        android:dividerHeight="8dp"
+        android:dividerHeight="14dp"
         android:focusable="true"
         android:focusableInTouchMode="true"></ListView>
 

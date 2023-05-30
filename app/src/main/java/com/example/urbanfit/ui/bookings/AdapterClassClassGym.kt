@@ -63,7 +63,7 @@ class AdapterClassClassGym(
             val clickedPosition = position
             // Realizar las acciones deseadas con la posición obtenida
             // Por ejemplo, puedes usarla para acceder al elemento correspondiente en tu lista de datos
-            Toast.makeText(ctx, "Posición: $clickedPosition", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(ctx, "Posición: $clickedPosition", Toast.LENGTH_SHORT).show()
         }
 
         itemView?.setOnClickListener {

@@ -180,7 +180,7 @@ class HomeFragment : Fragment(), AdapterCallbackBookingGym {
      * Establece los datos y algunas configuraciones del char
      */
     private fun setData(daysOfWeek: List<Float>) {
-        val bookingsPerDay = listOf("L", "M", "MX", "J", "V", "S", "D") // Lista de los nombres de los días de la semana
+        val bookingsPerDay = listOf("L", "M", "X", "J", "V", "S", "D") // Lista de los nombres de los días de la semana
 
         val entries = mutableListOf<BarEntry>()
         for (i in daysOfWeek.indices) {
@@ -189,8 +189,8 @@ class HomeFragment : Fragment(), AdapterCallbackBookingGym {
         }
 
         val colors = listOf(
-            Color.parseColor("#FF0000"), // Rojo
-            Color.parseColor("#00FF00")  // Verde
+            Color.parseColor("#FDD835"), // Amarillo
+            Color.parseColor("#9C27B0")  // Morado
         )
 
         val dataSet = BarDataSet(entries, "Reservas") // Crear un conjunto de datos de barras con las entradas

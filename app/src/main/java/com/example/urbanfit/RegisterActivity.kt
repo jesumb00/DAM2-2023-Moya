@@ -6,7 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
+import com.google.android.gms.tasks.Tasks
+import com.google.firebase.auth.FirebaseAuth
 
 
 class RegisterActivity : AppCompatActivity() {
@@ -36,14 +37,12 @@ class RegisterActivity : AppCompatActivity() {
             val password = registerPassword.text.toString()
             val repeatPassword = registerRepeatPassword.text.toString()
 
-            if (password.equals(repeatPassword) && checkEmpty(email,password)){
+            if (checkEmpty(email,password,repeatPassword)){
                 startActivity(Intent(this, DataUser::class.java)
                     .putExtra("email", email)
                     .putExtra("password",password)
                     .putExtra("create", "true"))
                 finish()
-            }else{
-                seeMessageRepeatReservationShow("Las contraseñas introducidas deben ser iguales")
             }
         }
 
@@ -56,9 +55,9 @@ class RegisterActivity : AppCompatActivity() {
 
 
     //Comprueba si los campos estan rellenos
-    private fun checkEmpty(email: String, password: String): Boolean {
+    private fun checkEmpty(email: String, password: String, repeatPassword: String): Boolean {
         val emailPattern = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]+\$") // Patrón para validar el formato del email
-        val passwordPattern = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+\$") // Patrón para validar la contraseña
+        val passwordPattern = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}\$") // Patrón para validar la contraseña
 
         if (email.isEmpty()) {
             seeMessageRepeatReservationShow("El campo de correo electrónico está vacío")
@@ -74,14 +73,18 @@ class RegisterActivity : AppCompatActivity() {
             seeMessageRepeatReservationShow("El campo de contraseña está vacío")
             return false
         }
-
         if (!password.matches(passwordPattern)) {
-            seeMessageRepeatReservationShow("La contraseña debe contener al menos una letra minúscula, una letra mayúscula y un número")
+            seeMessageRepeatReservationShow("La contraseña debe contener al menos 6 caracteres una letra minúscula, una letra mayúscula y un número")
+            return false
+        }
+        if(password != repeatPassword){
+            seeMessageRepeatReservationShow("Las contraseñas introducidas deben ser iguales")
             return false
         }
 
         return true
     }
+
 
     private fun seeMessageRepeatReservationShow(message: String) {
         val builder = AlertDialog.Builder(this)
