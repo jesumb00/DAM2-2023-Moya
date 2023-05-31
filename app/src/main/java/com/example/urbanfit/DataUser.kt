@@ -382,7 +382,9 @@ class DataUser : AppCompatActivity() {
      *  función inicia una actividad para permitir al usuario seleccionar una imagen de su dispositivo.
      *  */
     private fun selectImage() {
+        //Establecemos que la imagen por defecto sea el recurso img
         binding.image.setImageResource(R.drawable.img)
+        //establecemos por defecto que el valor de la imagen sea 0
         binding.image.setImageResource(0)
         // Creamos un nuevo intent
         val intent = Intent()

@@ -80,7 +80,7 @@ class LoginActivity : AppCompatActivity() {
 
         if (!password.matches(passwordPattern)) {
             seeMessageRepeatReservationShow("La contraseña debe contener al menos una letra minúscula, una letra mayúscula y un número")
-            return true
+            return false
         }
 
         return true

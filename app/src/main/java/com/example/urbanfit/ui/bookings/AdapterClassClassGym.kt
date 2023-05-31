@@ -87,7 +87,7 @@ class AdapterClassClassGym(
      * */
     private fun getFirebaseStorageImageReference(name: String, imageView: ImageView) {
         val storageReference = FirebaseStorage.getInstance().getReference("class/$name")
-        Toast.makeText(ctx, "class/$name", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(ctx, "class/$name", Toast.LENGTH_SHORT).show()
         Glide.with(ctx)
             .load(storageReference)
             .listener(object : RequestListener<Drawable> {
