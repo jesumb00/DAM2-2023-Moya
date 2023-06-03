@@ -139,14 +139,16 @@ class DataUser : AppCompatActivity() {
                     binding.progressBar.visibility = View.GONE
                     // Carga la imagen alternativa en caso de que la carga falle
                     Handler(Looper.getMainLooper()).post {
-                        Glide
-                            .with(this@DataUser) // Reemplaza YourActivity con el nombre de tu actividad
+                        // Se crea un Handler asociado al Looper del hilo principal para ejecutar código en el hilo principal
+                        Glide.with(this@DataUser)
+                            // Se inicia una solicitud de Glide utilizando el activity "this@DataUser"
                             .load(R.drawable.img)
+                            // Se carga la imagen especificada por el recurso R.drawable.img en la solicitud de Glide
                             .into(binding.image)
+                        // Se especifica el ImageView "binding.image" como destino donde se cargará la imagen
                     }
                     return false
                 }
-
                 // Este método se llama cuando la imagen se ha cargado correctamente
                 override fun onResourceReady(
                     resource: Drawable?,

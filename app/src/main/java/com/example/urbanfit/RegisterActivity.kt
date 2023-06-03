@@ -57,7 +57,8 @@ class RegisterActivity : AppCompatActivity() {
     //Comprueba si los campos estan rellenos
     private fun checkEmpty(email: String, password: String, repeatPassword: String): Boolean {
         val emailPattern = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]+\$") // Patrón para validar el formato del email
-        val passwordPattern = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{6,}\$") // Patrón para validar la contraseña
+        val passwordPattern = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=]).{6,}$"
+        ) // Patrón para validar la contraseña
 
         if (email.isEmpty()) {
             seeMessageRepeatReservationShow("El campo de correo electrónico está vacío")
